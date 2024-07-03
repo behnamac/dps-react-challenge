@@ -1,48 +1,60 @@
-#root {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 2rem;
-	text-align: center;
-}
-
-.logo {
-	height: 6em;
-	padding: 1.5em;
-	will-change: filter;
-	transition: filter 300ms;
-}
-.logo:hover {
-	filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-	filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	a:nth-of-type(2) .logo {
-		animation: logo-spin infinite 20s linear;
-	}
-}
-
-.card {
-	padding: 2em;
-}
-
-.home-card {
+body {
 	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
+	justify-content: center;
+	align-items: center;
+	font-family: Arial, sans-serif;
+	font-size: 16px;
+}
+.container {
+	width: 80%;
+	margin: 0 auto;
+	max-width: 800px;
+	padding: 20px;
 }
 
-.read-the-docs {
-	color: #888;
+.filter-controls {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+.filter-controls input,
+.filter-controls select,
+.filter-controls label {
+	margin-right: 10px;
+	padding: 5px;
+}
+
+.filter-controls label {
+	display: flex;
+	align-items: center;
+}
+
+.filter-controls input[type='checkbox'] {
+	margin-left: 5px;
+}
+
+.table-container {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.table-container th,
+.table-container td {
+	border: 1px solid #000000;
+	padding: 8px;
+	text-align: left;
+}
+
+.table-container th {
+	background-color: #2645f5;
+	font-weight: bold;
+}
+
+.table-container tr:nth-child(even) {
+	background-color: #666666;
+}
+
+.table-container tr:hover {
+	background-color: #16c2d8;
 }
