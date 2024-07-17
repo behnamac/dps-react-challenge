@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import FilterControls from './component/FilterControls';
@@ -6,80 +5,91 @@ import UserList from './component/UserList';
 import './App.css'; // Import the CSS file
 
 interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  city: string;
-  age: number;
+	id: number;
+	firstName: string;
+	lastName: string;
+	address: { city: string };
+	age: number;
 }
 
 const App: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [nameFilter, setNameFilter] = useState('');
-  const [cityFilter, setCityFilter] = useState('');
-  const [highlightOldest, setHighlightOldest] = useState(false);
+	const [users, setUsers] = useState<User[]>([]);
+	const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+	const [nameFilter, setNameFilter] = useState('');
+	const [cityFilter, setCityFilter] = useState('');
+	const [highlightOldest, setHighlightOldest] = useState(false);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await axios.get('https://dummyjson.com/users');
-      setUsers(response.data.users);
-      setFilteredUsers(response.data.users);
-    };
+	useEffect(() => {
+		const fetchUsers = async () => {
+			const response = await axios.get('https://dummyjson.com/users');
+			setUsers(response.data.users);
+			setFilteredUsers(response.data.users);
+		};
 
-    fetchUsers();
-  }, []);
+		fetchUsers();
+	}, []);
 
-  useEffect(() => {
-    const filtered = users.filter(
-      (user) =>
-        (user.firstName.toLowerCase().includes(nameFilter.toLowerCase()) ||
-          user.lastName.toLowerCase().includes(nameFilter.toLowerCase())) &&
-        (cityFilter ? user.city === cityFilter : true)
-    );
+	useEffect(() => {
+		const filtered = users.filter(
+			(user) =>
+				(user.firstName
+					.toLowerCase()
+					.includes(nameFilter.toLowerCase()) ||
+					user.lastName
+						.toLowerCase()
+						.includes(nameFilter.toLowerCase())) &&
+				(cityFilter ? user.address.city === cityFilter : true)
+		);
 
-    if (highlightOldest) {
-      const oldestUsers = filtered.reduce((acc: { [key: string]: User }, user) => {
-        if (!acc[user.city] || acc[user.city].age < user.age) {
-          acc[user.city] = user;
-        }
-        return acc;
-      }, {});
+		if (highlightOldest) {
+			const oldestUsers = filtered.reduce(
+				(acc: { [key: string]: User }, user) => {
+					if (!acc[user.address.city] || acc[user.address.city].age < user.age) {
+						acc[user.address.city] = user;
+					}
+					return acc;
+				},
+				{}
+			);
 
-      setFilteredUsers(Object.values(oldestUsers));
-    } else {
-      setFilteredUsers(filtered);
-    }
-  }, [nameFilter, cityFilter, highlightOldest, users]);
+			setFilteredUsers(Object.values(oldestUsers));
+		} else {
+			setFilteredUsers(filtered);
+		}
+	}, [nameFilter, cityFilter, highlightOldest, users]);
 
-  const uniqueCities = [...new Set(users.map((user) => user.city))];
+	const uniqueCities = [...new Set(users.map((user) => user.address.city))];
 
-  const handleNameFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNameFilter(e.target.value);
-  };
+	const handleNameFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setNameFilter(e.target.value);
+	};
 
-  const handleCityFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCityFilter(e.target.value);
-  };
+	const handleCityFilterChange = (
+		e: React.ChangeEvent<HTMLSelectElement>
+	) => {
+		setCityFilter(e.target.value);
+	};
 
-  const handleHighlightOldestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setHighlightOldest(e.target.checked);
-  };
+	const handleHighlightOldestChange = (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
+		setHighlightOldest(e.target.checked);
+	};
 
-  return (
-    <div className="container">
-      <FilterControls
-        nameFilter={nameFilter}
-        cityFilter={cityFilter}
-        highlightOldest={highlightOldest}
-        uniqueCities={uniqueCities}
-        onNameFilterChange={handleNameFilterChange}
-        onCityFilterChange={handleCityFilterChange}
-        onHighlightOldestChange={handleHighlightOldestChange}
-      />
-      <UserList users={filteredUsers} />
-    </div>
-  );
+	return (
+		<div className="container">
+			<FilterControls
+				nameFilter={nameFilter}
+				cityFilter={cityFilter}
+				highlightOldest={highlightOldest}
+				uniqueCities={uniqueCities}
+				onNameFilterChange={handleNameFilterChange}
+				onCityFilterChange={handleCityFilterChange}
+				onHighlightOldestChange={handleHighlightOldestChange}
+			/>
+			<UserList users={filteredUsers} />
+		</div>
+	);
 };
 
 export default App;
